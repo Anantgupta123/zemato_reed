@@ -11,7 +11,7 @@ router.post("/register",authController.registerUser)
 router.post("/login",authController.loginUser)
 
 //user logout /api/auth/logout
-router.get("/logout",authController.loginUser)
+router.post("/logout",authController.logoutUser)
 
 
 

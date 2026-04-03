@@ -1,6 +1,6 @@
-const userModel = require("../models/user.model")
+const userModel = require("../models/user.model.js")
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 async function registerUser(req, res) {
@@ -82,12 +82,12 @@ async function loginUser(req, res) {
 
 async function logoutUser(req, res) {
 
-    const user = await userModel
+    // const user = await userModel
 
 
     res.clearCookie("token");
     res.status(200).json({
-        user:user.fullName,
+        // user:user.fullName,
         message: "User logged out successfully"
     });
 }
