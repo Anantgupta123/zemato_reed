@@ -14,6 +14,16 @@ router.post("/login",authController.loginUser)
 router.post("/logout",authController.logoutUser)
 
 
+//foodPatner /api/auth/PatnerRegister
+router.post("/patnerRegister",authController.foodPatnerRegister)
+
+//foodPatner /api/auth/PatnerLogin
+router.post("/patnerLogin",authController.foodPatnerLogin)
+
+//foodPatner /api/auth/PatnerLogout
+router.post("/patnerLogout",authController.foodPatnerLogout)
+
+
 
 
 
