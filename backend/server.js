@@ -10,5 +10,5 @@ const port = process.env.PORT
 
 
 app.listen(port || 3000,()=>{
-    console.log("Server is connected to db")
+    console.log("Server is connected")
 })

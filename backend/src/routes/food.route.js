@@ -7,7 +7,9 @@ const router = express.Router()
 
 
 
-router.post("/",middleware.foodPatnerVerification,uploadVideo.single("video"),foodController)
+router.post("/",middleware.foodPatnerVerification,uploadVideo.single("video"),foodController.createFood)
+
+router.get("/food",middleware.userVerification,foodController.getFoodItem)
 
 
 
