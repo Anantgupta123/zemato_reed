@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/auth-shared.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const UserRegister = () => {
 
     const navigate = useNavigate();
+    const { startLoading, stopLoading, showError, showSuccess } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,20 +18,21 @@ const UserRegister = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
+        try {
+            startLoading();
+            const response = await axios.post("http://localhost:3000/api/auth/user/register", {
+                fullName: firstName + " " + lastName,
+                email,
+                password
+            }, { withCredentials: true });
 
-        const response = await axios.post("http://localhost:3000/api/auth/user/register", {
-            fullName: firstName + " " + lastName,
-            email,
-            password
-        },
-        {
-            withCredentials: true
-        })
-
-        console.log(response.data);
-
-        navigate("/")
-
+            showSuccess('Account created! Redirecting to home...');
+            setTimeout(() => navigate("/"), 1500);
+        } catch (error) {
+            showError(error.response?.data?.message || "Registration failed.");
+        } finally {
+            stopLoading();
+        }
     };
 
     return (

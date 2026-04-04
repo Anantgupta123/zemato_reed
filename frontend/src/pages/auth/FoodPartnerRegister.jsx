@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/auth-shared.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,32 +8,36 @@ import { useNavigate } from 'react-router-dom';
 const FoodPartnerRegister = () => {
 
   const navigate = useNavigate();
+  const { startLoading, stopLoading, showError, showSuccess } = useAuth();
   
-  const handleSubmit = (e) => { 
+  const handleSubmit = async (e) => { 
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const businessName = formData.get('businessName');
+    const contactName = formData.get('contactName');
+    const phone = formData.get('phone');
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const address = formData.get('address');
 
-    const businessName = e.target.businessName.value;
-    const contactName = e.target.contactName.value;
-    const phone = e.target.phone.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const address = e.target.address.value;
-
-    axios.post("http://localhost:3000/api/auth/food-partner/register", {
-      name:businessName,
-      contactName,
-      phone,
-      email,
-      password,
-      address
-    }, { withCredentials: true })
-      .then(response => {
-        console.log(response.data);
-        navigate("/create-food"); // Redirect to create food page after successful registration
-      })
-      .catch(error => {
-        console.error("There was an error registering!", error);
-      });
+    try {
+      startLoading();
+      const response = await axios.post("http://localhost:3000/api/auth/food-partner/register", {
+        name: businessName,
+        contactName,
+        phone,
+        email,
+        password,
+        address
+      }, { withCredentials: true });
+      
+      showSuccess('Partner account created! Redirecting...');
+      setTimeout(() => navigate("/create-food"), 1500);
+    } catch (error) {
+      showError(error.response?.data?.message || "Registration failed. Try again.");
+    } finally {
+      stopLoading();
+    }
   };
 
   return (

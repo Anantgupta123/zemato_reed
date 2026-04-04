@@ -1,13 +1,42 @@
-# React Food Reels Frontend TODO
+# Frontend Error Fixes & Improvements TODO
 
-## Steps:
-1. [X] Setup Vite React project structure in `frontend/` (package.json, vite.config.js, tailwind setup).
-2. [X] Install exact deps: `npm install axios@1.6.8 react-router-dom` (+ Tailwind).
-3. [X] Create core files: main.jsx, App.jsx, index.css, AuthContext.
-4. [ ] Create API services (auth.js, food.js).
-5. [ ] Create components (Navbar, VideoPlayer, ReelCard, UploadForm).
-6. [ ] Create pages (Home, UserAuth, PartnerAuth, Dashboard, UserReels, PartnerUpload).
-7. [ ] Test setup: `cd frontend && npm run dev`.
-8. [ ] Mark complete.
+Current Working Directory: frontend/
 
-**Progress: 3/8**
+## Steps (Sequential)
+
+### 1. Create AuthContext for global state (loading, errors, auth)
+- New file: src/context/AuthContext.jsx
+- Provide to App.jsx
+
+### 2. Fix Profile.jsx errors (unused use hook, add loading/error handling)
+- Remove `use` import
+- Add useContext for loading
+- Fix video keys/alt
+
+### 3. Refactor App.jsx & AppRoutes.jsx (move Router up, add Suspense/layout)
+- App.jsx: Add BrowserRouter, Context Provider, Suspense
+- AppRoutes.jsx: Simplify Routes, add layout routes with BottomNav
+
+### 4. Fix auth pages (remove console.error, add loading/feedback)
+- UserLogin.jsx, FoodPartnerLogin.jsx, UserRegister.jsx, FoodPartnerRegister.jsx, ChooseRegister.jsx
+
+### 5. Enhance CreateFood.jsx (validation, error display, loading)
+- Use Context for feedback
+- Improve file upload validation
+
+### 6. Improve Home.jsx & Saved.jsx (error handling, loading)
+- Use Context
+- Better empty states
+
+### 7. Enhance ReelFeed.jsx (accessibility, optimistic updates)
+
+### 8. Global improvements
+- index.html: Update title
+- App.css: Minor responsive fixes
+- Run `npm run lint -- --fix`
+
+### 9. Test & Completion
+- cd frontend && npm install && npm run dev
+- Manual tests
+
+**Progress: 0/9 complete**

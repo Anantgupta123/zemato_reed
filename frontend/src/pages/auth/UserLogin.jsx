@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/auth-shared.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const UserLogin = () => {
 
   const navigate = useNavigate();
+  const { startLoading, stopLoading, showError, showSuccess } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,15 +15,20 @@ const UserLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const response = await axios.post("http://localhost:3000/api/auth/user/login", {
-      email,
-      password
-    }, { withCredentials: true });
+    try {
+      startLoading();
+      const response = await axios.post("http://localhost:3000/api/auth/user/login", {
+        email,
+        password
+      }, { withCredentials: true });
 
-    console.log(response.data);
-
-    navigate("/"); // Redirect to home after login
-
+      showSuccess('Logged in successfully!');
+      setTimeout(() => navigate("/"), 1000);
+    } catch (error) {
+      showError(error.response?.data?.message || 'Login failed');
+    } finally {
+      stopLoading();
+    }
   };
 
   return (

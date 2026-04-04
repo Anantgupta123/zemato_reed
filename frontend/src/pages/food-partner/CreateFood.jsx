@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import '../../styles/create-food.css';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ const CreateFood = () => {
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
+    const { startLoading, stopLoading, showError, showSuccess } = useAuth();
 
     useEffect(() => {
         if (!videoFile) {
@@ -50,23 +52,43 @@ const CreateFood = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
+        if (!name.trim()) {
+            showError('Please enter a name');
+            return;
+        }
+        if (description.length < 10) {
+            showError('Description must be at least 10 characters');
+            return;
+        }
+        if (!videoFile) {
+            showError('Please select a video');
+            return;
+        }
 
+        const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
-        formData.append("mama", videoFile);
+        formData.append('video', videoFile); // Fix field name from "mama"
 
-        const response = await axios.post("http://localhost:3000/api/food", formData, {
-            withCredentials: true,
-        })
-
-        console.log(response.data);
-        navigate("/"); // Redirect to home or another page after successful creation
-        // Optionally reset
-        // setName(''); setDescription(''); setVideoFile(null);
+        try {
+            startLoading();
+            const response = await axios.post("http://localhost:3000/api/food", formData, {
+                withCredentials: true,
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            showSuccess('Food item created successfully!');
+            setTimeout(() => {
+                setName(''); setDescription(''); setVideoFile(null); setFileError('');
+                navigate("/");
+            }, 1500);
+        } catch (error) {
+            showError(error.response?.data?.message || 'Failed to create food item');
+        } finally {
+            stopLoading();
+        }
     };
 
-    const isDisabled = useMemo(() => !name.trim() || !videoFile, [ name, videoFile ]);
+    const isDisabled = useMemo(() => !name.trim() || !videoFile || description.length < 10, [ name, videoFile, description ]);
 
     return (
         <div className="create-food-page">
