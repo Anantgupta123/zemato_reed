@@ -15,6 +15,14 @@ const foodSchema = new mongoose.Schema({
     foodPatner:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"FoodPatner"
+    },
+    likeCount:{
+        type:Number,
+        default:0
+    },
+    saveFoodCount:{
+        type:Number,
+        default:0
     }
     
 })
